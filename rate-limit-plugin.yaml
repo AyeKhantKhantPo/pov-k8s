@@ -1,0 +1,11 @@
+# rate-limit-plugin.yaml
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: rate-limit-dashboard
+  namespace: default
+plugin: rate-limiting
+config:
+  minute: 10
+  policy: local

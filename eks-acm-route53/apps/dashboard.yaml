@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: dashboard
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard
+  # ADDED: AWS Load Balancer Annotations for HTTPS
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:ap-southeast-1:983426483382:certificate/78f796ec-b7b8-4031-801c-5394db6e7dd4" # <--- PASTE YOUR Certifiacte ARN HERE
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+spec:
+  type: LoadBalancer # Use LoadBalancer to get an AWS ELB
+  selector:
+    app: dashboard
+  # CHANGED: Listen on 443 (HTTPS) and forward to 9002 on the container
+  ports:
+  - name: https
+    port: 443
+    targetPort: 9002
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: dashboard
+  name: dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashboard
+  template:
+    metadata:
+      labels:
+        app: dashboard
+    spec:
+      serviceAccountName: dashboard
+      containers:
+      - name: dashboard
+        image: hashicorp/dashboard-service:0.0.4
+        ports:
+        - containerPort: 9002
+        env:
+        - name: COUNTING_SERVICE_URL
+          value: 'http://counting:9001'

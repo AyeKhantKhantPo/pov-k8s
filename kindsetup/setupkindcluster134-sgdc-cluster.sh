@@ -29,13 +29,13 @@ kubectl get ipaddresspools.metallb.io -n metallb-system
 kubectl get l2advertisements.metallb.io -n metallb-system
 sleep 1
 kubectl config rename-context kind-sgdc-cluster sgdc-cluster
-sleep 1
-license=$(cat consul-ent-license.hclic)
-kubectl create ns consul --context sgdc-cluster
+# sleep 1
+# license=$(cat consul-ent-license.hclic)
+# kubectl create ns consul --context sgdc-cluster
 
-kubectl create secret generic consul-ent-license --from-literal="key=${license}" -n consul --context sgdc-cluster
+# kubectl create secret generic consul-ent-license --from-literal="key=${license}" -n consul --context sgdc-cluster
 
-watch kubectl get secrets consul-ent-license -n consul -o yaml --context sgdc-cluster
+# watch kubectl get secrets consul-ent-license -n consul -o yaml --context sgdc-cluster
 # watch kubectl get pods -A --context sgdc-cluster
 
 

@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kong-ingress
+  namespace: default
+  annotations:
+    # Optional: strip the path prefix before forwarding to the backend
+    konghq.com/strip-path: "true"
+    konghq.com/plugins: rate-limit-dashboard  # <-- This is how you attach the plugin to the Ingress
+spec:
+  ingressClassName: kong          # <-- This is what tells Kong to own this Ingress
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: dashboard
+                port:
+                  number: 9002

@@ -38,12 +38,6 @@ spec:
         app: dashboard
     spec:
       serviceAccountName: dashboard
-      # ADD THIS SECTION BELOW
-      hostAliases:
-      - ip: "10.133.174.201" # The IP of your counting service
-        hostnames:
-        - "counting.default.svc.cluster.local"
-      # END OF SECTION
       containers:
       - name: dashboard
         image: hashicorp/dashboard-service:0.0.4
